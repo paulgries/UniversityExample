@@ -5,9 +5,7 @@ import entity.Person;
 import entity.Student;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -18,7 +16,6 @@ public class UniversityDataAccessObject {
 
     // UTORid to Person
     private final Map<String, Person> persons = new HashMap<>();
-    private final Map<String, Student> students = new HashMap<>();
 
     /**
      * Read the Person and Student objects in CSV files named personFilename and studentFilename.
@@ -32,14 +29,34 @@ public class UniversityDataAccessObject {
         this.studentFile = new File(studentFilename);
 
         if (this.personFile.exists()) {
+            readPersonFile(personFile);
+        }
 
-            readPersonFile(personFilename);
+        if (this.studentFile.exists()) {
+            readStudentFile(studentFile);
         }
     }
 
-    private void readPersonFile(String personFilename) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(personFilename))) {
-            String header = reader.readLine();
+    private void readStudentFile(File studentFile) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.studentFile))) {
+
+            String row;
+            while ((row = reader.readLine()) != null) {
+                // "lastfirs,First Middle Last"
+                String[] cols = row.split(",");
+                String utorid = cols[0];
+                String saveName = cols[1];
+                String[] names = saveName.split(" ");
+                String studentNumber = cols[2];
+
+                Person p = new Student(names, utorid, studentNumber);
+                persons.put(utorid, p);
+            }
+        }
+    }
+
+    private void readPersonFile(File personFile) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(this.personFile))) {
 
             String row;
             while ((row = reader.readLine()) != null) {
@@ -61,17 +78,27 @@ public class UniversityDataAccessObject {
     }
 
     private void save() {
-        BufferedWriter writer;
         try {
-            writer = new BufferedWriter(new FileWriter(personFile));
+            BufferedWriter personWriter = new BufferedWriter(new FileWriter(personFile));
+            BufferedWriter studentWriter = new BufferedWriter(new FileWriter(studentFile));
             for (Person person : persons.values()) {
+
                 String saveName = String.join(" ", person.getName());
-                String line = "%s,%s".formatted(person.getUtorid(), saveName);
-                writer.write(line);
-                writer.newLine();
+
+                if (person instanceof Student) {
+                    Student s = (Student) person;
+                    String line = "%s,%s,%s".formatted(person.getUtorid(), saveName, s.getStudentID());
+                    studentWriter.write(line);
+                    studentWriter.write("\n");
+                } else {
+                    String line = "%s,%s".formatted(person.getUtorid(), saveName);
+                    personWriter.write(line);
+                    personWriter.write("\n");
+                }
             }
 
-            writer.close();
+            personWriter.close();
+            studentWriter.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

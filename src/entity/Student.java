@@ -19,6 +19,10 @@ public class Student extends Person {
         this.studentID = sid;
     }
 
+    public String getStudentID() {
+        return studentID;
+    }
+
     @Override
     public String toString() {
         return super.toString()+ ", " + this.studentID;
