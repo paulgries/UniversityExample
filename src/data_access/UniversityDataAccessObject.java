@@ -11,11 +11,12 @@ import java.util.Map;
 
 public class UniversityDataAccessObject {
 
-    private final File personFile;
+    private final File personFile; // Data is saved here
     private final File studentFile;
 
     // UTORid to Person
-    private final Map<String, Person> persons = new HashMap<>();
+    private final Map<String, Person> persons = new HashMap<>(); // Data is stored here
+    // while program is running so it doesn't need to be retrieved from the file every time
 
     /**
      * Read the Person and Student objects in CSV files named personFilename and studentFilename.
@@ -25,11 +26,11 @@ public class UniversityDataAccessObject {
      * @throws IOException when there is an error reading either file
      */
     public UniversityDataAccessObject(String personFilename, String studentFilename) throws IOException {
-        this.personFile = new File(personFilename);
+        this.personFile = new File(personFilename); // Creates the file
         this.studentFile = new File(studentFilename);
 
         if (this.personFile.exists()) {
-            readPersonFile(personFile);
+            readPersonFile(personFile); // Tries to read the files, if they exist
         }
 
         if (this.studentFile.exists()) {
@@ -41,7 +42,7 @@ public class UniversityDataAccessObject {
         try (BufferedReader reader = new BufferedReader(new FileReader(this.studentFile))) {
 
             String row;
-            while ((row = reader.readLine()) != null) {
+            while ((row = reader.readLine()) != null) { // Will read until end of file is reached
                 // "lastfirs,First Middle Last"
                 String[] cols = row.split(",");
                 String utorid = cols[0];
@@ -85,12 +86,16 @@ public class UniversityDataAccessObject {
 
                 String saveName = String.join(" ", person.getName());
 
-                if (person instanceof Student) {
+                if (person instanceof Student) { // Instead of checking which type of person is
+                    // stored, we could just use polymorphism and create a toString method for
+                    // both types
+                    // But, we would have to change class every time we want to change format.
                     Student s = (Student) person;
                     String line = "%s,%s,%s".formatted(person.getUtorid(), saveName, s.getStudentID());
                     studentWriter.write(line);
                     studentWriter.write("\n");
-                } else {
+                } else { // if the person is not a student, the format must be changed and
+                    // we do not attempt to get the student ID
                     String line = "%s,%s".formatted(person.getUtorid(), saveName);
                     personWriter.write(line);
                     personWriter.write("\n");
