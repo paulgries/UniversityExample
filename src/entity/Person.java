@@ -50,7 +50,7 @@ public class Person implements Comparable<Person> {
 
     /**
      * Return the name formatted as a str. The last name is first, then a
-     * comma, then the rest of the names.
+     * comma, then the rest of the names separated by spaces.
      *
      * @return the name formatted as a str.
      */

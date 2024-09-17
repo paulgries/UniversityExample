@@ -5,7 +5,9 @@ package entity;
  */
 public class Student extends Person {
 
-    /** This student's student ID. */
+    /**
+     * This student's student ID.
+     */
     private final String studentID;
 
     /**
@@ -21,6 +23,6 @@ public class Student extends Person {
 
     @Override
     public String toString() {
-        return super.toString()+ ", " + this.studentID;
+        return super.toString() + ", " + this.studentID;
     }
 }
