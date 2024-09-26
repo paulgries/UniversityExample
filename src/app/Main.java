@@ -11,7 +11,8 @@ public class Main {
     public static void main(String[] args) {
         String[] name = {"First", "Middle", "Last"};
         Person p1 = new Person(name, "moogah");
-        System.out.println(p1);
+        System.out.println(p1); // this calls p1.toString()
+        ((Student) p1).m();
         Student s1 = new Student(name, "frooble", "1234567890");
         System.out.println(s1);
 
@@ -26,7 +27,7 @@ public class Main {
 
         UniversityDataAccessObject universityDAO = null;
         try {
-             universityDAO = new UniversityDataAccessObject(
+            universityDAO = new UniversityDataAccessObject(
                     "person.csv", "student.csv");
         } catch (IOException e) {
             System.out.println("Could not read from files." + e);

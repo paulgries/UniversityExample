@@ -35,6 +35,7 @@ public class Person implements Comparable<Person> {
 
     public String[] getName() {
         // Try not to create aliases!
+//        return name;
         return Arrays.copyOf(name, name.length);
     }
 

@@ -25,4 +25,6 @@ public class Student extends Person {
     public String toString() {
         return super.toString() + ", " + this.studentID;
     }
+
+    public void m() {}
 }
